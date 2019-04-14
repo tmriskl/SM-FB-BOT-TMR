@@ -172,6 +172,7 @@ public class MessengerPlatformCallbackHandler {
         		try {
         			int id = Integer.valueOf(messageText.toLowerCase());
         			sendTextMessage(senderId,"ID="+id);
+        			ID = false;
         		}catch (Exception e) {
                     handleSendException(e);
         			sendTextMessage(senderId,"ID needs to be a integer(1,2,3,etc.)");
@@ -241,6 +242,7 @@ public class MessengerPlatformCallbackHandler {
         		 */
         		case "player":
         			sendTextMessage(senderId, "what is the player id?");
+        			ID = true;
         			break;
         		default:
         			sendTextMessage(senderId, messageText+" "+messageText);
