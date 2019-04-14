@@ -14,6 +14,8 @@ import static java.util.Optional.of;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.messenger4j.Messenger;
 import com.github.messenger4j.common.WebviewHeightRatio;
 import com.github.messenger4j.exception.MessengerApiException;
@@ -61,6 +63,7 @@ import com.github.messenger4j.webhook.event.TextMessageEvent;
 import com.github.messenger4j.webhook.event.attachment.Attachment;
 import com.github.messenger4j.webhook.event.attachment.LocationAttachment;
 import com.github.messenger4j.webhook.event.attachment.RichMediaAttachment;
+import com.google.gson.Gson;
 
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
@@ -69,6 +72,7 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -182,13 +186,23 @@ public class MessengerPlatformCallbackHandler {
         try {
         	if(ID) {
         		try {
+        			ID = false;
         			int id = Integer.valueOf(messageText.toLowerCase());
         			URL url = new URL("https://soccer.sportmonks.com/api/v2.0/fixtures/"+id+"?api_token="+APIToken);
         			StringBuilder builder = new StringBuilder();
         		    
         			HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
         			httpURLConnection.setRequestMethod("GET");
-        			builder.append(httpURLConnection.getResponseCode())
+        			
+        			ObjectMapper mapper = new ObjectMapper();
+        			String json = httpURLConnection.getResponseMessage();
+
+        			Map<String, Object> map = new HashMap<String, Object>();
+
+        			// convert JSON string to Map
+        			map = mapper.readValue(json, new TypeReference<Map<String, String>>(){});
+        			
+        			/*builder.append(httpURLConnection.getResponseCode())
         			       .append(" ")
         			       .append(httpURLConnection.getResponseMessage())
         			       .append("\n");
@@ -213,7 +227,7 @@ public class MessengerPlatformCallbackHandler {
         			    builder.append("\n");
         			}
         			ID = false;
-        			sendTextMessage(senderId,"ID="+id+"\n"+builder.toString());
+        			sendTextMessage(senderId,"ID="+id+"\n"+builder.toString());*/
         			sendImageMessage(senderId,new URL(map.get("image_path")+""));
 //        			sendTextMessage(senderId,""+con.getHeaderFields());
 //        			sendTextMessage(senderId,""+con.getRequestProperties());
