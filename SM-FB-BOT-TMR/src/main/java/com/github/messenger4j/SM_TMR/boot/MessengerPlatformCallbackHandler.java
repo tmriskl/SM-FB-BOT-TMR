@@ -223,7 +223,7 @@ public class MessengerPlatformCallbackHandler {
         	}
         	else {
         		switch (messageText.toLowerCase()) {
-        		/*case "user":
+        		case "user":
                     sendUserDetails(senderId);
                     break;
 
@@ -282,7 +282,7 @@ public class MessengerPlatformCallbackHandler {
                 case "account linking":
                     sendAccountLinking(senderId);
                     break;
-        		 */
+        		 
         		case "player":
         			sendTextMessage(senderId, "what is the player id?");
         			ID = true;
@@ -451,7 +451,7 @@ public class MessengerPlatformCallbackHandler {
     }
 
     private void sendImageMessage(String recipientId) throws MessengerApiException, MessengerIOException, MalformedURLException {
-        final UrlRichMediaAsset richMediaAsset = UrlRichMediaAsset.create(IMAGE, new URL(RESOURCE_URL + "/assets/rift.png"));
+        final UrlRichMediaAsset richMediaAsset = UrlRichMediaAsset.create(IMAGE, new URL("https://helpx.adobe.com/in/stock/how-to/visual-reverse-image-search/_jcr_content/main-pars/image.img.jpg/visual-reverse-image-search-v2_1000x560.jpg"));
         sendRichMediaMessage(recipientId, richMediaAsset);
     }
 
