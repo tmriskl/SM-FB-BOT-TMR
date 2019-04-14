@@ -212,10 +212,11 @@ public class MessengerPlatformCallbackHandler {
         			    }
         			    builder.append("\n");
         			}
+        			ID = false;
         			sendTextMessage(senderId,"ID="+id+"\n"+builder.toString());
+        			sendImageMessage(senderId,new URL(map.get("image_path")+""));
 //        			sendTextMessage(senderId,""+con.getHeaderFields());
 //        			sendTextMessage(senderId,""+con.getRequestProperties());
-        			ID = false;
         		}catch (Exception e) {
                     handleSendException(e);
         			sendTextMessage(senderId,"ID needs to be a integer(1,2,3,etc.)" + e.getMessage());
@@ -223,7 +224,7 @@ public class MessengerPlatformCallbackHandler {
         	}
         	else {
         		switch (messageText.toLowerCase()) {
-        		case "user":
+        		/*case "user":
                     sendUserDetails(senderId);
                     break;
 
@@ -282,7 +283,7 @@ public class MessengerPlatformCallbackHandler {
                 case "account linking":
                     sendAccountLinking(senderId);
                     break;
-        		 
+        		 */
         		case "player":
         			sendTextMessage(senderId, "what is the player id?");
         			ID = true;
@@ -444,16 +445,23 @@ public class MessengerPlatformCallbackHandler {
         logger.error("Message could not be sent. An unexpected error occurred.", e);
     }
 
+    private void sendImageMessage(String recipientId, URL url) throws MessengerApiException, MessengerIOException, MalformedURLException {
+        final UrlRichMediaAsset richMediaAsset = UrlRichMediaAsset.create(IMAGE, url);
+        sendRichMediaMessage(recipientId, richMediaAsset);
+    }
+    
     private void sendUserDetails(String recipientId) throws MessengerApiException, MessengerIOException {
         final UserProfile userProfile = this.messenger.queryUserProfile(recipientId);
         sendTextMessage(recipientId, String.format("Your name is %s and you are %s", userProfile.firstName(), userProfile.gender()));
         logger.info("User Profile Picture: {}", userProfile.profilePicture());
     }
+    
 
     private void sendImageMessage(String recipientId) throws MessengerApiException, MessengerIOException, MalformedURLException {
-        final UrlRichMediaAsset richMediaAsset = UrlRichMediaAsset.create(IMAGE, new URL("https://helpx.adobe.com/in/stock/how-to/visual-reverse-image-search/_jcr_content/main-pars/image.img.jpg/visual-reverse-image-search-v2_1000x560.jpg"));
+        final UrlRichMediaAsset richMediaAsset = UrlRichMediaAsset.create(IMAGE, new URL(RESOURCE_URL + "/assets/rift.png"));
         sendRichMediaMessage(recipientId, richMediaAsset);
     }
+    
 
     private void sendGifMessage(String recipientId) throws MessengerApiException, MessengerIOException, MalformedURLException {
         final UrlRichMediaAsset richMediaAsset = UrlRichMediaAsset.create(IMAGE, new URL("https://media.giphy.com/media/11sBLVxNs7v6WA/giphy.gif"));
