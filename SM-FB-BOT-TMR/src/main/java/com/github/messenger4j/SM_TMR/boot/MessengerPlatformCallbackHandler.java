@@ -185,33 +185,9 @@ public class MessengerPlatformCallbackHandler {
         			int id = Integer.valueOf(messageText.toLowerCase());
         			URL url = new URL("https://soccer.sportmonks.com/api/v2.0/fixtures/"+id+"?api_token="+APIToken);
         			StringBuilder builder = new StringBuilder();
-        		    HttpURLConnection c = null;
-        		    c = (HttpURLConnection) url.openConnection();
-        		    c.setRequestMethod("GET");
-        		    c.setRequestProperty("Content-length", "0");
-        		    c.setUseCaches(false);
-        		    c.setAllowUserInteraction(false);
-        		    c.setConnectTimeout(1000*20);
-        		    c.setReadTimeout(1000*20);
-        		    c.connect();
-        		    builder.append(c.getInputStream().toString());
-//        		    int status = c.getResponseCode();
-
-//        		    switch (status) {
-//        		    case 200:
-//        		    case 201:
-//        		    	BufferedReader br = new BufferedReader(new InputStreamReader(c.getInputStream()));
-//
-//        		    	String line;
-//        		    	while ((line = br.readLine()) != null) {
-//        		    		builder.append(line+"\n");
-//        		    	}
-//        		    	br.close();
-//        		    }
-        		    /*
+        		    
         			HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
         			httpURLConnection.setRequestMethod("GET");
-        			StringBuilder builder = new StringBuilder();
         			builder.append(httpURLConnection.getResponseCode())
         			       .append(" ")
         			       .append(httpURLConnection.getResponseMessage())
@@ -235,7 +211,7 @@ public class MessengerPlatformCallbackHandler {
         			        }
         			    }
         			    builder.append("\n");
-        			}*/
+        			}
         			sendTextMessage(senderId,"ID="+id+"\n"+builder.toString());
 //        			sendTextMessage(senderId,""+con.getHeaderFields());
 //        			sendTextMessage(senderId,""+con.getRequestProperties());
