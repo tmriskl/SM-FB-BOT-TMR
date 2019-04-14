@@ -11,6 +11,9 @@ import static com.github.messenger4j.send.message.richmedia.RichMediaAsset.Type.
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+
 import com.github.messenger4j.Messenger;
 import com.github.messenger4j.common.WebviewHeightRatio;
 import com.github.messenger4j.exception.MessengerApiException;
@@ -181,6 +184,30 @@ public class MessengerPlatformCallbackHandler {
         		try {
         			int id = Integer.valueOf(messageText.toLowerCase());
         			URL url = new URL("https://soccer.sportmonks.com/api/v2.0/fixtures/"+id+"?api_token="+APIToken);
+        			StringBuilder builder = new StringBuilder();
+        		    HttpURLConnection c = null;
+        		    c = (HttpURLConnection) url.openConnection();
+        		    c.setRequestMethod("GET");
+        		    c.setRequestProperty("Content-length", "0");
+        		    c.setUseCaches(false);
+        		    c.setAllowUserInteraction(false);
+        		    c.setConnectTimeout(10);
+        		    c.setReadTimeout(10);
+        		    c.connect();
+        		    int status = c.getResponseCode();
+
+        		    switch (status) {
+        		    case 200:
+        		    case 201:
+        		    	BufferedReader br = new BufferedReader(new InputStreamReader(c.getInputStream()));
+
+        		    	String line;
+        		    	while ((line = br.readLine()) != null) {
+        		    		builder.append(line+"\n");
+        		    	}
+        		    	br.close();
+        		    }
+        		    /*
         			HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
         			httpURLConnection.setRequestMethod("GET");
         			StringBuilder builder = new StringBuilder();
@@ -196,7 +223,6 @@ public class MessengerPlatformCallbackHandler {
         			        continue;
         			    builder.append( entry.getKey())
         			           .append(": ");
-
         			    List<String> headerValues = entry.getValue();
         			    Iterator<String> it = headerValues.iterator();
         			    if (it.hasNext()) {
@@ -207,9 +233,8 @@ public class MessengerPlatformCallbackHandler {
         			                   .append(it.next());
         			        }
         			    }
-
         			    builder.append("\n");
-        			}
+        			}*/
         			sendTextMessage(senderId,"ID="+id+"\n"+builder.toString());
 //        			sendTextMessage(senderId,""+con.getHeaderFields());
 //        			sendTextMessage(senderId,""+con.getRequestProperties());
