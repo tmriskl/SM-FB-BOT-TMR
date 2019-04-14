@@ -58,6 +58,8 @@ import com.github.messenger4j.webhook.event.TextMessageEvent;
 import com.github.messenger4j.webhook.event.attachment.Attachment;
 import com.github.messenger4j.webhook.event.attachment.LocationAttachment;
 import com.github.messenger4j.webhook.event.attachment.RichMediaAttachment;
+
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.time.Instant;
@@ -92,10 +94,14 @@ public class MessengerPlatformCallbackHandler {
     private static final String RESOURCE_URL = "https://raw.githubusercontent.com/fbsamples/messenger-platform-samples/master/node/public";
 
     private static final Logger logger = LoggerFactory.getLogger(MessengerPlatformCallbackHandler.class);
+    
+    private final String APIToken = "Z7z5bkXnX8BdH1eViHqjDryKx3qlvR2iA6oETQp71jRDl865rflCcX9P6wGR";
 
     private final Messenger messenger;
     
     private boolean ID = false;
+    
+    
 
     @Autowired
     public MessengerPlatformCallbackHandler(final Messenger messenger) {
@@ -171,7 +177,12 @@ public class MessengerPlatformCallbackHandler {
         	if(ID) {
         		try {
         			int id = Integer.valueOf(messageText.toLowerCase());
-        			sendTextMessage(senderId,"ID="+id);
+        			URL url = new URL("https://soccer.sportmonks.com/api/v2.0/fixtures/"+id+"?api_token="+APIToken);
+        			HttpURLConnection con = (HttpURLConnection) url.openConnection();
+        			con.setRequestMethod("GET");
+        			
+        			
+        			sendTextMessage(senderId,"ID="+id+" "+con);
         			ID = false;
         		}catch (Exception e) {
                     handleSendException(e);
@@ -253,149 +264,9 @@ public class MessengerPlatformCallbackHandler {
         }
     }
 
-    private void sendUserDetails(String recipientId) throws MessengerApiException, MessengerIOException {
-        final UserProfile userProfile = this.messenger.queryUserProfile(recipientId);
-        sendTextMessage(recipientId, String.format("Your name is %s and you are %s", userProfile.firstName(), userProfile.gender()));
-        logger.info("User Profile Picture: {}", userProfile.profilePicture());
-    }
-
-    private void sendImageMessage(String recipientId) throws MessengerApiException, MessengerIOException, MalformedURLException {
-        final UrlRichMediaAsset richMediaAsset = UrlRichMediaAsset.create(IMAGE, new URL(RESOURCE_URL + "/assets/rift.png"));
-        sendRichMediaMessage(recipientId, richMediaAsset);
-    }
-
     private void sendRichMediaMessage(String recipientId, UrlRichMediaAsset richMediaAsset) throws MessengerApiException, MessengerIOException {
         final RichMediaMessage richMediaMessage = RichMediaMessage.create(richMediaAsset);
         final MessagePayload messagePayload = MessagePayload.create(recipientId, MessagingType.RESPONSE, richMediaMessage);
-        this.messenger.send(messagePayload);
-    }
-
-    private void sendGifMessage(String recipientId) throws MessengerApiException, MessengerIOException, MalformedURLException {
-        final UrlRichMediaAsset richMediaAsset = UrlRichMediaAsset.create(IMAGE, new URL("https://media.giphy.com/media/11sBLVxNs7v6WA/giphy.gif"));
-        sendRichMediaMessage(recipientId, richMediaAsset);
-    }
-
-    private void sendAudioMessage(String recipientId) throws MessengerApiException, MessengerIOException, MalformedURLException {
-        final UrlRichMediaAsset richMediaAsset = UrlRichMediaAsset.create(AUDIO, new URL(RESOURCE_URL + "/assets/sample.mp3"));
-        sendRichMediaMessage(recipientId, richMediaAsset);
-    }
-
-    private void sendVideoMessage(String recipientId) throws MessengerApiException, MessengerIOException, MalformedURLException {
-        final UrlRichMediaAsset richMediaAsset = UrlRichMediaAsset.create(VIDEO, new URL(RESOURCE_URL + "/assets/allofus480.mov"));
-        sendRichMediaMessage(recipientId, richMediaAsset);
-    }
-
-    private void sendFileMessage(String recipientId) throws MessengerApiException, MessengerIOException, MalformedURLException {
-        final UrlRichMediaAsset richMediaAsset = UrlRichMediaAsset.create(FILE, new URL(RESOURCE_URL + "/assets/test.txt"));
-        sendRichMediaMessage(recipientId, richMediaAsset);
-    }
-
-    private void sendButtonMessage(String recipientId) throws MessengerApiException, MessengerIOException, MalformedURLException {
-        final List<Button> buttons = Arrays.asList(
-                UrlButton.create("Open Web URL", new URL("https://www.oculus.com/en-us/rift/"), of(WebviewHeightRatio.COMPACT), of(false), empty(), empty()),
-                PostbackButton.create("Trigger Postback", "DEVELOPER_DEFINED_PAYLOAD"), CallButton.create("Call Phone Number", "+16505551234")
-        );
-
-        final ButtonTemplate buttonTemplate = ButtonTemplate.create("Tap a button", buttons);
-        final TemplateMessage templateMessage = TemplateMessage.create(buttonTemplate);
-        final MessagePayload messagePayload = MessagePayload.create(recipientId, MessagingType.RESPONSE, templateMessage);
-        this.messenger.send(messagePayload);
-    }
-
-    private void sendGenericMessage(String recipientId) throws MessengerApiException, MessengerIOException, MalformedURLException {
-        List<Button> riftButtons = new ArrayList<>();
-        riftButtons.add(UrlButton.create("Open Web URL", new URL("https://www.oculus.com/en-us/rift/")));
-        riftButtons.add(PostbackButton.create("Call Postback", "Payload for first bubble"));
-
-        List<Button> touchButtons = new ArrayList<>();
-        touchButtons.add(UrlButton.create("Open Web URL", new URL("https://www.oculus.com/en-us/touch/")));
-        touchButtons.add(PostbackButton.create("Call Postback", "Payload for second bubble"));
-
-        final List<Element> elements = new ArrayList<>();
-
-        elements.add(
-                Element.create("rift", of("Next-generation virtual reality"), of(new URL("https://www.oculus.com/en-us/rift/")), empty(), of(riftButtons)));
-        elements.add(Element.create("touch", of("Your Hands, Now in VR"), of(new URL("https://www.oculus.com/en-us/touch/")), empty(), of(touchButtons)));
-
-        final GenericTemplate genericTemplate = GenericTemplate.create(elements);
-        final TemplateMessage templateMessage = TemplateMessage.create(genericTemplate);
-        final MessagePayload messagePayload = MessagePayload.create(recipientId, MessagingType.RESPONSE, templateMessage);
-        this.messenger.send(messagePayload);
-    }
-
-    private void sendListMessageMessage(String recipientId) throws MessengerApiException, MessengerIOException, MalformedURLException {
-        List<Button> riftButtons = new ArrayList<>();
-        riftButtons.add(UrlButton.create("Open Web URL", new URL("https://www.oculus.com/en-us/rift/")));
-
-        List<Button> touchButtons = new ArrayList<>();
-        touchButtons.add(UrlButton.create("Open Web URL", new URL("https://www.oculus.com/en-us/touch/")));
-
-        final List<Element> elements = new ArrayList<>();
-
-        elements.add(
-                Element.create("rift", of("Next-generation virtual reality"), of(new URL("https://www.oculus.com/en-us/rift/")), empty(), of(riftButtons)));
-        elements.add(Element.create("touch", of("Your Hands, Now in VR"), of(new URL("https://www.oculus.com/en-us/touch/")), empty(), of(touchButtons)));
-
-        final ListTemplate listTemplate = ListTemplate.create(elements);
-        final TemplateMessage templateMessage = TemplateMessage.create(listTemplate);
-        final MessagePayload messagePayload = MessagePayload.create(recipientId, MessagingType.RESPONSE, templateMessage);
-        this.messenger.send(messagePayload);
-    }
-
-    private void sendReceiptMessage(String recipientId) throws MessengerApiException, MessengerIOException, MalformedURLException {
-        final String uniqueReceiptId = "order-" + Math.floor(Math.random() * 1000);
-
-        final List<Item> items = new ArrayList<>();
-
-        items.add(Item.create("Oculus Rift", 599.00f, of("Includes: headset, sensor, remote"), of(1), of("USD"),
-                of(new URL(RESOURCE_URL + "/assets/riftsq.png"))));
-        items.add(Item.create("Samsung Gear VR", 99.99f, of("Frost White"), of(1), of("USD"), of(new URL(RESOURCE_URL + "/assets/gearvrsq.png"))));
-
-        final ReceiptTemplate receiptTemplate = ReceiptTemplate
-                .create("Peter Chang", uniqueReceiptId, "Visa 1234", "USD", Summary.create(626.66f, of(698.99f), of(57.67f), of(20.00f)),
-                        of(Address.create("1 Hacker Way", "Menlo Park", "94025", "CA", "US")), of(items),
-                        of(Arrays.asList(Adjustment.create("New Customer Discount", -50f), Adjustment.create("$100 Off Coupon", -100f))),
-                        of("The Boring Company"), of(new URL("https://www.boringcompany.com/")), of(true), of(Instant.ofEpochMilli(1428444852L)));
-
-        final TemplateMessage templateMessage = TemplateMessage.create(receiptTemplate);
-        final MessagePayload messagePayload = MessagePayload.create(recipientId, MessagingType.RESPONSE, templateMessage);
-        this.messenger.send(messagePayload);
-    }
-
-    private void sendQuickReply(String recipientId) throws MessengerApiException, MessengerIOException {
-        List<QuickReply> quickReplies = new ArrayList<>();
-
-        quickReplies.add(TextQuickReply.create("Action", "DEVELOPER_DEFINED_PAYLOAD_FOR_PICKING_ACTION"));
-        quickReplies.add(TextQuickReply.create("Comedy", "DEVELOPER_DEFINED_PAYLOAD_FOR_PICKING_COMEDY"));
-        quickReplies.add(TextQuickReply.create("Drama", "DEVELOPER_DEFINED_PAYLOAD_FOR_PICKING_DRAMA"));
-        quickReplies.add(LocationQuickReply.create());
-
-        TextMessage message = TextMessage.create("What's your favorite movie genre?", of(quickReplies), empty());
-        messenger.send(MessagePayload.create(recipientId, MessagingType.RESPONSE, message));
-    }
-
-    private void sendReadReceipt(String recipientId) throws MessengerApiException, MessengerIOException {
-        this.messenger.send(SenderActionPayload.create(recipientId, SenderAction.MARK_SEEN));
-    }
-
-    private void sendTypingOn(String recipientId) throws MessengerApiException, MessengerIOException {
-        this.messenger.send(SenderActionPayload.create(recipientId, SenderAction.TYPING_ON));
-    }
-
-    private void sendTypingOff(String recipientId) throws MessengerApiException, MessengerIOException {
-        this.messenger.send(SenderActionPayload.create(recipientId, SenderAction.TYPING_OFF));
-    }
-
-    private void sendAccountLinking(String recipientId) throws MessengerApiException, MessengerIOException, MalformedURLException {
-        // Mandatory https
-        final LogInButton buttonIn = LogInButton.create(new URL("https://<YOUR_REST_CALLBACK_URL>"));
-        final LogOutButton buttonOut = LogOutButton.create();
-
-        final List<Button> buttons = Arrays.asList(buttonIn, buttonOut);
-        final ButtonTemplate buttonTemplate = ButtonTemplate.create("Log in to see an account linking callback", buttons);
-
-        final TemplateMessage templateMessage = TemplateMessage.create(buttonTemplate);
-        final MessagePayload messagePayload = MessagePayload.create(recipientId, MessagingType.RESPONSE, templateMessage);
         this.messenger.send(messagePayload);
     }
 
@@ -540,4 +411,145 @@ public class MessengerPlatformCallbackHandler {
     private void handleSendException(Exception e) {
         logger.error("Message could not be sent. An unexpected error occurred.", e);
     }
+
+    private void sendUserDetails(String recipientId) throws MessengerApiException, MessengerIOException {
+        final UserProfile userProfile = this.messenger.queryUserProfile(recipientId);
+        sendTextMessage(recipientId, String.format("Your name is %s and you are %s", userProfile.firstName(), userProfile.gender()));
+        logger.info("User Profile Picture: {}", userProfile.profilePicture());
+    }
+
+    private void sendImageMessage(String recipientId) throws MessengerApiException, MessengerIOException, MalformedURLException {
+        final UrlRichMediaAsset richMediaAsset = UrlRichMediaAsset.create(IMAGE, new URL(RESOURCE_URL + "/assets/rift.png"));
+        sendRichMediaMessage(recipientId, richMediaAsset);
+    }
+
+    private void sendGifMessage(String recipientId) throws MessengerApiException, MessengerIOException, MalformedURLException {
+        final UrlRichMediaAsset richMediaAsset = UrlRichMediaAsset.create(IMAGE, new URL("https://media.giphy.com/media/11sBLVxNs7v6WA/giphy.gif"));
+        sendRichMediaMessage(recipientId, richMediaAsset);
+    }
+
+    private void sendAudioMessage(String recipientId) throws MessengerApiException, MessengerIOException, MalformedURLException {
+        final UrlRichMediaAsset richMediaAsset = UrlRichMediaAsset.create(AUDIO, new URL(RESOURCE_URL + "/assets/sample.mp3"));
+        sendRichMediaMessage(recipientId, richMediaAsset);
+    }
+
+    private void sendVideoMessage(String recipientId) throws MessengerApiException, MessengerIOException, MalformedURLException {
+        final UrlRichMediaAsset richMediaAsset = UrlRichMediaAsset.create(VIDEO, new URL(RESOURCE_URL + "/assets/allofus480.mov"));
+        sendRichMediaMessage(recipientId, richMediaAsset);
+    }
+
+    private void sendFileMessage(String recipientId) throws MessengerApiException, MessengerIOException, MalformedURLException {
+        final UrlRichMediaAsset richMediaAsset = UrlRichMediaAsset.create(FILE, new URL(RESOURCE_URL + "/assets/test.txt"));
+        sendRichMediaMessage(recipientId, richMediaAsset);
+    }
+
+    private void sendButtonMessage(String recipientId) throws MessengerApiException, MessengerIOException, MalformedURLException {
+        final List<Button> buttons = Arrays.asList(
+                UrlButton.create("Open Web URL", new URL("https://www.oculus.com/en-us/rift/"), of(WebviewHeightRatio.COMPACT), of(false), empty(), empty()),
+                PostbackButton.create("Trigger Postback", "DEVELOPER_DEFINED_PAYLOAD"), CallButton.create("Call Phone Number", "+16505551234")
+        );
+
+        final ButtonTemplate buttonTemplate = ButtonTemplate.create("Tap a button", buttons);
+        final TemplateMessage templateMessage = TemplateMessage.create(buttonTemplate);
+        final MessagePayload messagePayload = MessagePayload.create(recipientId, MessagingType.RESPONSE, templateMessage);
+        this.messenger.send(messagePayload);
+    }
+
+    private void sendGenericMessage(String recipientId) throws MessengerApiException, MessengerIOException, MalformedURLException {
+        List<Button> riftButtons = new ArrayList<>();
+        riftButtons.add(UrlButton.create("Open Web URL", new URL("https://www.oculus.com/en-us/rift/")));
+        riftButtons.add(PostbackButton.create("Call Postback", "Payload for first bubble"));
+
+        List<Button> touchButtons = new ArrayList<>();
+        touchButtons.add(UrlButton.create("Open Web URL", new URL("https://www.oculus.com/en-us/touch/")));
+        touchButtons.add(PostbackButton.create("Call Postback", "Payload for second bubble"));
+
+        final List<Element> elements = new ArrayList<>();
+
+        elements.add(
+                Element.create("rift", of("Next-generation virtual reality"), of(new URL("https://www.oculus.com/en-us/rift/")), empty(), of(riftButtons)));
+        elements.add(Element.create("touch", of("Your Hands, Now in VR"), of(new URL("https://www.oculus.com/en-us/touch/")), empty(), of(touchButtons)));
+
+        final GenericTemplate genericTemplate = GenericTemplate.create(elements);
+        final TemplateMessage templateMessage = TemplateMessage.create(genericTemplate);
+        final MessagePayload messagePayload = MessagePayload.create(recipientId, MessagingType.RESPONSE, templateMessage);
+        this.messenger.send(messagePayload);
+    }
+
+    private void sendListMessageMessage(String recipientId) throws MessengerApiException, MessengerIOException, MalformedURLException {
+        List<Button> riftButtons = new ArrayList<>();
+        riftButtons.add(UrlButton.create("Open Web URL", new URL("https://www.oculus.com/en-us/rift/")));
+
+        List<Button> touchButtons = new ArrayList<>();
+        touchButtons.add(UrlButton.create("Open Web URL", new URL("https://www.oculus.com/en-us/touch/")));
+
+        final List<Element> elements = new ArrayList<>();
+
+        elements.add(
+                Element.create("rift", of("Next-generation virtual reality"), of(new URL("https://www.oculus.com/en-us/rift/")), empty(), of(riftButtons)));
+        elements.add(Element.create("touch", of("Your Hands, Now in VR"), of(new URL("https://www.oculus.com/en-us/touch/")), empty(), of(touchButtons)));
+
+        final ListTemplate listTemplate = ListTemplate.create(elements);
+        final TemplateMessage templateMessage = TemplateMessage.create(listTemplate);
+        final MessagePayload messagePayload = MessagePayload.create(recipientId, MessagingType.RESPONSE, templateMessage);
+        this.messenger.send(messagePayload);
+    }
+
+    private void sendReceiptMessage(String recipientId) throws MessengerApiException, MessengerIOException, MalformedURLException {
+        final String uniqueReceiptId = "order-" + Math.floor(Math.random() * 1000);
+
+        final List<Item> items = new ArrayList<>();
+
+        items.add(Item.create("Oculus Rift", 599.00f, of("Includes: headset, sensor, remote"), of(1), of("USD"),
+                of(new URL(RESOURCE_URL + "/assets/riftsq.png"))));
+        items.add(Item.create("Samsung Gear VR", 99.99f, of("Frost White"), of(1), of("USD"), of(new URL(RESOURCE_URL + "/assets/gearvrsq.png"))));
+
+        final ReceiptTemplate receiptTemplate = ReceiptTemplate
+                .create("Peter Chang", uniqueReceiptId, "Visa 1234", "USD", Summary.create(626.66f, of(698.99f), of(57.67f), of(20.00f)),
+                        of(Address.create("1 Hacker Way", "Menlo Park", "94025", "CA", "US")), of(items),
+                        of(Arrays.asList(Adjustment.create("New Customer Discount", -50f), Adjustment.create("$100 Off Coupon", -100f))),
+                        of("The Boring Company"), of(new URL("https://www.boringcompany.com/")), of(true), of(Instant.ofEpochMilli(1428444852L)));
+
+        final TemplateMessage templateMessage = TemplateMessage.create(receiptTemplate);
+        final MessagePayload messagePayload = MessagePayload.create(recipientId, MessagingType.RESPONSE, templateMessage);
+        this.messenger.send(messagePayload);
+    }
+
+    private void sendQuickReply(String recipientId) throws MessengerApiException, MessengerIOException {
+        List<QuickReply> quickReplies = new ArrayList<>();
+
+        quickReplies.add(TextQuickReply.create("Action", "DEVELOPER_DEFINED_PAYLOAD_FOR_PICKING_ACTION"));
+        quickReplies.add(TextQuickReply.create("Comedy", "DEVELOPER_DEFINED_PAYLOAD_FOR_PICKING_COMEDY"));
+        quickReplies.add(TextQuickReply.create("Drama", "DEVELOPER_DEFINED_PAYLOAD_FOR_PICKING_DRAMA"));
+        quickReplies.add(LocationQuickReply.create());
+
+        TextMessage message = TextMessage.create("What's your favorite movie genre?", of(quickReplies), empty());
+        messenger.send(MessagePayload.create(recipientId, MessagingType.RESPONSE, message));
+    }
+
+    private void sendReadReceipt(String recipientId) throws MessengerApiException, MessengerIOException {
+        this.messenger.send(SenderActionPayload.create(recipientId, SenderAction.MARK_SEEN));
+    }
+
+    private void sendTypingOn(String recipientId) throws MessengerApiException, MessengerIOException {
+        this.messenger.send(SenderActionPayload.create(recipientId, SenderAction.TYPING_ON));
+    }
+
+    private void sendTypingOff(String recipientId) throws MessengerApiException, MessengerIOException {
+        this.messenger.send(SenderActionPayload.create(recipientId, SenderAction.TYPING_OFF));
+    }
+
+    private void sendAccountLinking(String recipientId) throws MessengerApiException, MessengerIOException, MalformedURLException {
+        // Mandatory https
+        final LogInButton buttonIn = LogInButton.create(new URL("https://<YOUR_REST_CALLBACK_URL>"));
+        final LogOutButton buttonOut = LogOutButton.create();
+
+        final List<Button> buttons = Arrays.asList(buttonIn, buttonOut);
+        final ButtonTemplate buttonTemplate = ButtonTemplate.create("Log in to see an account linking callback", buttons);
+
+        final TemplateMessage templateMessage = TemplateMessage.create(buttonTemplate);
+        final MessagePayload messagePayload = MessagePayload.create(recipientId, MessagingType.RESPONSE, templateMessage);
+        this.messenger.send(messagePayload);
+    }
+
 }
