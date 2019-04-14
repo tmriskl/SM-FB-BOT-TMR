@@ -67,6 +67,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -180,9 +182,9 @@ public class MessengerPlatformCallbackHandler {
         			URL url = new URL("https://soccer.sportmonks.com/api/v2.0/fixtures/"+id+"?api_token="+APIToken);
         			HttpURLConnection con = (HttpURLConnection) url.openConnection();
         			con.setRequestMethod("GET");
-        			
-        			
-        			sendTextMessage(senderId,"ID="+id+" "+con);
+
+        			sendTextMessage(senderId,"ID="+id+" "+ con.getHeaderFields());
+        			sendTextMessage(senderId,""+con.getRequestProperties());
         			ID = false;
         		}catch (Exception e) {
                     handleSendException(e);
