@@ -240,7 +240,7 @@ public class MessengerPlatformCallbackHandler {
                     break;
         		 */
         		case "player":
-        			sendTextMessage(senderId, "ID?");
+        			sendTextMessage(senderId, "what is the player id?");
         			break;
         		default:
         			sendTextMessage(senderId, messageText+" "+messageText);
