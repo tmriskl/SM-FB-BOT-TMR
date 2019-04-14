@@ -194,19 +194,20 @@ public class MessengerPlatformCallbackHandler {
         		    c.setConnectTimeout(1000*20);
         		    c.setReadTimeout(1000*20);
         		    c.connect();
-        		    int status = c.getResponseCode();
+        		    builder.append(c.getInputStream().toString());
+//        		    int status = c.getResponseCode();
 
-        		    switch (status) {
-        		    case 200:
-        		    case 201:
-        		    	BufferedReader br = new BufferedReader(new InputStreamReader(c.getInputStream()));
-
-        		    	String line;
-        		    	while ((line = br.readLine()) != null) {
-        		    		builder.append(line+"\n");
-        		    	}
-        		    	br.close();
-        		    }
+//        		    switch (status) {
+//        		    case 200:
+//        		    case 201:
+//        		    	BufferedReader br = new BufferedReader(new InputStreamReader(c.getInputStream()));
+//
+//        		    	String line;
+//        		    	while ((line = br.readLine()) != null) {
+//        		    		builder.append(line+"\n");
+//        		    	}
+//        		    	br.close();
+//        		    }
         		    /*
         			HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
         			httpURLConnection.setRequestMethod("GET");
