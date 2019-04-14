@@ -182,7 +182,7 @@ public class MessengerPlatformCallbackHandler {
         			URL url = new URL("https://soccer.sportmonks.com/api/v2.0/fixtures/"+id+"?api_token="+APIToken);
         			HttpURLConnection con = (HttpURLConnection) url.openConnection();
         			con.setRequestMethod("GET");
-        			String json = con.getRequestProperty("image_path");
+        			String json = con.getResponseMessage();
         			sendTextMessage(senderId,"ID="+id+" "+json);
 //        			sendTextMessage(senderId,""+con.getHeaderFields());
 //        			sendTextMessage(senderId,""+con.getRequestProperties());
