@@ -191,8 +191,8 @@ public class MessengerPlatformCallbackHandler {
         		    c.setRequestProperty("Content-length", "0");
         		    c.setUseCaches(false);
         		    c.setAllowUserInteraction(false);
-        		    c.setConnectTimeout(10);
-        		    c.setReadTimeout(10);
+        		    c.setConnectTimeout(1000*20);
+        		    c.setReadTimeout(1000*20);
         		    c.connect();
         		    int status = c.getResponseCode();
 
