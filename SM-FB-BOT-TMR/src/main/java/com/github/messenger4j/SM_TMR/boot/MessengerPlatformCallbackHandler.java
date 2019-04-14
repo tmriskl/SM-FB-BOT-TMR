@@ -101,7 +101,7 @@ public class MessengerPlatformCallbackHandler {
 
     private static final Logger logger = LoggerFactory.getLogger(MessengerPlatformCallbackHandler.class);
     
-    private final String APIToken = "Z7z5bkXnX8BdH1eViHqjDryKx3qlvR2iA6oETQp71jRDl865rflCcX9P6wGR";
+    private final String APIToken = "BYkxdcd63GQD1XDQaKyRLUKMswJiH4VHiQnXldpgSDKlChG3iZsuRa3JzJLI";
 
     private final Messenger messenger;
     
