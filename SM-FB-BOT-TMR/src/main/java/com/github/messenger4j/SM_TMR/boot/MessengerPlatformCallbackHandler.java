@@ -77,6 +77,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+//git clone https://github.com/tmriskl/SM-FB-BOT-TMR.git
 /**
  * This is the main class for inbound and outbound communication with the Facebook Messenger Platform. The callback
  * handler is responsible for the webhook verification and processing of the inbound messages and events. It showcases
