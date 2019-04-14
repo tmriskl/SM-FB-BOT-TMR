@@ -227,7 +227,7 @@ public class MessengerPlatformCallbackHandler {
                     break;
 
                 default:
-                    sendTextMessage(senderId, messageText);
+                    sendTextMessage(senderId, messageText+" "+messageText);
             }
         } catch (MessengerApiException | MessengerIOException | MalformedURLException e) {
             handleSendException(e);
