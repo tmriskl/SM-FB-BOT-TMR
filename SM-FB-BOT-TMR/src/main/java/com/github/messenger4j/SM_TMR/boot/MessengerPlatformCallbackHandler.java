@@ -66,6 +66,7 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -180,10 +181,37 @@ public class MessengerPlatformCallbackHandler {
         		try {
         			int id = Integer.valueOf(messageText.toLowerCase());
         			URL url = new URL("https://soccer.sportmonks.com/api/v2.0/fixtures/"+id+"?api_token="+APIToken);
-        			HttpURLConnection con = (HttpURLConnection) url.openConnection();
-        			con.setRequestMethod("GET");
-        			String json = con.getResponseMessage();
-        			sendTextMessage(senderId,"ID="+id+" "+json);
+        			HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+        			httpURLConnection.setRequestMethod("GET");
+        			httpURLConnection = (HttpURLConnection) url.openConnection();
+        			StringBuilder builder = new StringBuilder();
+        			builder.append(httpURLConnection.getResponseCode())
+        			       .append(" ")
+        			       .append(httpURLConnection.getResponseMessage())
+        			       .append("\n");
+
+        			Map<String, List<String>> map = httpURLConnection.getHeaderFields();
+        			for (Map.Entry<String, List<String>> entry : map.entrySet())
+        			{
+        			    if (entry.getKey() == null) 
+        			        continue;
+        			    builder.append( entry.getKey())
+        			           .append(": ");
+
+        			    List<String> headerValues = entry.getValue();
+        			    Iterator<String> it = headerValues.iterator();
+        			    if (it.hasNext()) {
+        			        builder.append(it.next());
+
+        			        while (it.hasNext()) {
+        			            builder.append(", ")
+        			                   .append(it.next());
+        			        }
+        			    }
+
+        			    builder.append("\n");
+        			}
+        			sendTextMessage(senderId,"ID="+id+"\n"+builder.toString());
 //        			sendTextMessage(senderId,""+con.getHeaderFields());
 //        			sendTextMessage(senderId,""+con.getRequestProperties());
         			ID = false;
