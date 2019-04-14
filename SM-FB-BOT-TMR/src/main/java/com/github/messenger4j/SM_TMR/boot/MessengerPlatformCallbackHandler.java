@@ -241,7 +241,7 @@ public class MessengerPlatformCallbackHandler {
         			ID = false;
         		}catch (Exception e) {
                     handleSendException(e);
-        			sendTextMessage(senderId,"ID needs to be a integer(1,2,3,etc.)");
+        			sendTextMessage(senderId,"ID needs to be a integer(1,2,3,etc.)" + e.getMessage());
         		}
         	}
         	else {
