@@ -94,6 +94,8 @@ public class MessengerPlatformCallbackHandler {
     private static final Logger logger = LoggerFactory.getLogger(MessengerPlatformCallbackHandler.class);
 
     private final Messenger messenger;
+    
+    private boolean ID = false;
 
     @Autowired
     public MessengerPlatformCallbackHandler(final Messenger messenger) {
@@ -166,8 +168,18 @@ public class MessengerPlatformCallbackHandler {
         logger.info("Received message '{}' with text '{}' from user '{}' at '{}'", messageId, messageText, senderId, timestamp);
 
         try {
-            switch (messageText.toLowerCase()) {
-                /*case "user":
+        	if(ID) {
+        		try {
+        			int id = Integer.valueOf(messageText.toLowerCase());
+        			sendTextMessage(senderId,"ID="+id);
+        		}catch (Exception e) {
+                    handleSendException(e);
+        			sendTextMessage(senderId,"ID needs to be a integer(1,2,3,etc.)");
+        		}
+        	}
+        	else {
+        		switch (messageText.toLowerCase()) {
+        		/*case "user":
                     sendUserDetails(senderId);
                     break;
 
@@ -226,13 +238,14 @@ public class MessengerPlatformCallbackHandler {
                 case "account linking":
                     sendAccountLinking(senderId);
                     break;
-*/
-            	case "player":
-            		sendTextMessage(senderId, "ID?");
-            		break;
-                default:
-                    sendTextMessage(senderId, messageText+" "+messageText);
-            }
+        		 */
+        		case "player":
+        			sendTextMessage(senderId, "ID?");
+        			break;
+        		default:
+        			sendTextMessage(senderId, messageText+" "+messageText);
+        		}
+        	}
         } catch (Exception e) {
             handleSendException(e);
         }
