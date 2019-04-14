@@ -183,7 +183,6 @@ public class MessengerPlatformCallbackHandler {
         			URL url = new URL("https://soccer.sportmonks.com/api/v2.0/fixtures/"+id+"?api_token="+APIToken);
         			HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
         			httpURLConnection.setRequestMethod("GET");
-        			httpURLConnection = (HttpURLConnection) url.openConnection();
         			StringBuilder builder = new StringBuilder();
         			builder.append(httpURLConnection.getResponseCode())
         			       .append(" ")
