@@ -167,7 +167,7 @@ public class MessengerPlatformCallbackHandler {
 
         try {
             switch (messageText.toLowerCase()) {
-                case "user":
+                /*case "user":
                     sendUserDetails(senderId);
                     break;
 
@@ -226,11 +226,14 @@ public class MessengerPlatformCallbackHandler {
                 case "account linking":
                     sendAccountLinking(senderId);
                     break;
-
+*/
+            	case "player":
+            		sendTextMessage(senderId, "ID?");
+            		break;
                 default:
                     sendTextMessage(senderId, messageText+" "+messageText);
             }
-        } catch (MessengerApiException | MessengerIOException | MalformedURLException e) {
+        } catch (Exception e) {
             handleSendException(e);
         }
     }
