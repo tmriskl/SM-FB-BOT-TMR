@@ -210,7 +210,7 @@ public class MessengerPlatformCallbackHandler {
         			sendTextMessage(senderId,"Error: " + e.getClass() + " " + e.getMessage());
         		}
         	}
-        	else if(mode.equals(Mode.PLAYER)){
+        	/*else if(mode.equals(Mode.PLAYER)){
         		if(messageText.toLowerCase().equals("EXIT_OPTION")) {
         			info = null;
         			mode = Mode.DEFAULT;
@@ -224,8 +224,8 @@ public class MessengerPlatformCallbackHandler {
         			sendTextMessage(senderId, messageText + NOT_VALID_KEY);
         			sendTextMessage(senderId, BuilderFromInfoMap().toString());
         		}
-        	}
-        	else if(mode.equals(Mode.DEFAULT)) {
+        	}*/
+        	else if(mode.equals(Mode.DEFAULT)||mode.equals(Mode.PLAYER)) {
         		switch (messageText.toLowerCase()) {
         		case "player":
         			sendTextMessage(senderId, "what is the player id?");
