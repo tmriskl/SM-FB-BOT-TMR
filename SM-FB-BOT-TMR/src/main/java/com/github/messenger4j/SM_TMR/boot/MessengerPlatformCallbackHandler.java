@@ -69,6 +69,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -103,10 +105,10 @@ public class MessengerPlatformCallbackHandler {
     private final String APIToken = "BYkxdcd63GQD1XDQaKyRLUKMswJiH4VHiQnXldpgSDKlChG3iZsuRa3JzJLI";
     private final Messenger messenger;
     private final String DEFAULT_MESSEGE = "Type 'player' to get player info\n";
-    private final String PLAYER_INFO_TYPES = "Type one of the following keys to get the information:\n";
-    private final String NOT_VALID_KEY = "Not a valid key";
-    private final String EXIT_OPTION = "exit";
-    private final String EXIT = "Type '"+EXIT_OPTION+"' to choose a different player\n";
+    private final String PLAYER_INFO_TYPES = "This is the player info:\n";//"Type one of the following keys to get the information:\n";
+    //private final String NOT_VALID_KEY = " is not a valid key";
+    //private final String EXIT_OPTION = "exit";
+    //private final String EXIT = "Type '"+EXIT_OPTION+"' to choose a different player\n";
     
     private Map<String,String> info = null;
     private Mode mode = Mode.DEFAULT;
@@ -185,7 +187,7 @@ public class MessengerPlatformCallbackHandler {
         try {
         	if(mode.equals(Mode.PLAYER_ID)) {
         		try {
-        			mode = Mode.PLAYER;
+        			mode = Mode.DEFAULT;
         			long id = Long.valueOf(messageText.toLowerCase());
         			URL url = new URL("https://soccer.sportmonks.com/api/v2.0/players/"+id+"?api_token="+APIToken);
         			HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
@@ -210,7 +212,7 @@ public class MessengerPlatformCallbackHandler {
         			sendTextMessage(senderId,"Error: " + e.getClass() + " " + e.getMessage());
         		}
         	}
-        	else if(mode.equals(Mode.PLAYER)){
+        	/*else if(mode.equals(Mode.PLAYER)){
         		if(messageText.toLowerCase().equals("EXIT_OPTION")) {
         			info = null;
         			mode = Mode.DEFAULT;
@@ -224,7 +226,7 @@ public class MessengerPlatformCallbackHandler {
         			sendTextMessage(senderId, messageText + NOT_VALID_KEY);
         			sendTextMessage(senderId, BuilderFromInfoMap().toString());
         		}
-        	}
+        	}*/
         	else if(mode.equals(Mode.DEFAULT)/*||mode.equals(Mode.PLAYER)*/) {
         		switch (messageText.toLowerCase()) {
         		case "player":
@@ -247,10 +249,10 @@ public class MessengerPlatformCallbackHandler {
     private StringBuilder BuilderFromInfoMap() {
     	StringBuilder builder = new StringBuilder();
 		builder.append(PLAYER_INFO_TYPES);
-		for(String key: info.keySet()) {
-			builder.append(key + "\n");
+		for(Entry<String, String> entry: info.entrySet()) {
+			builder.append(entry.getKey() + ": " + entry.getValue());
 		}
-		builder.append(EXIT);
+		//builder.append(EXIT);
 		return builder;
 	}
 
