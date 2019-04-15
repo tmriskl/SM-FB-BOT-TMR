@@ -189,14 +189,14 @@ public class MessengerPlatformCallbackHandler {
         			ID = false;
         			int id = Integer.valueOf(messageText.toLowerCase());
         			URL url = new URL("https://soccer.sportmonks.com/api/v2.0/fixtures/"+id+"?api_token="+APIToken);
-        			//StringBuilder builder = new StringBuilder();
+        			StringBuilder builder = new StringBuilder();
         		    
         			HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
         			httpURLConnection.setRequestMethod("GET");
         			
-        			ObjectMapper mapper = new ObjectMapper();
+        			/*ObjectMapper mapper = new ObjectMapper();
         			String json = httpURLConnection.getResponseMessage();
-        			if(json.equalsIgnoreCase("forbedden")) {
+        			if(json==null||json.equalsIgnoreCase("forbedden")) {
         				sendTextMessage(senderId,"ID="+id+"\n No Player with this ID");
         			}
         			else {
@@ -204,8 +204,8 @@ public class MessengerPlatformCallbackHandler {
 
         			// convert JSON string to Map
         			map = mapper.readValue(json, new TypeReference<Map<String, String>>(){});
-        			
-        			/*builder.append(httpURLConnection.getResponseCode())
+        			*/
+        			builder.append(httpURLConnection.getResponseCode())
         			       .append(" ")
         			       .append(httpURLConnection.getResponseMessage())
         			       .append("\n");
@@ -230,11 +230,11 @@ public class MessengerPlatformCallbackHandler {
         			    builder.append("\n");
         			}
         			ID = false;
-        			sendTextMessage(senderId,"ID="+id+"\n"+builder.toString());*/
+        			sendTextMessage(senderId,"ID="+id+"\n"+builder.toString());
         			sendImageMessage(senderId,new URL(map.get("image_path")+""));
 //        			sendTextMessage(senderId,""+con.getHeaderFields());
 //        			sendTextMessage(senderId,""+con.getRequestProperties());
-        			}
+        			//}
         		}catch (Exception e) {
                     handleSendException(e);
         			sendTextMessage(senderId,"ID needs to be a integer(1,2,3,etc.)" + e.getMessage());
