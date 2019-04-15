@@ -189,12 +189,21 @@ public class MessengerPlatformCallbackHandler {
         		try {
         			ID = false;
         			long id = Long.valueOf(messageText.toLowerCase());
-        			URL url = new URL("https://soccer.sportmonks.com/api/v2.0/fixtures/"+id+"?api_token="+APIToken);
+        			URL url = new URL("https://soccer.sportmonks.com/api/v2.0/players/"+id+"?api_token="+APIToken);
         			StringBuilder builder = new StringBuilder();
         		    
         			HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
         			httpURLConnection.setRequestMethod("GET");
-        			httpURLConnection.setRequestProperty("User-Agent", USER_AGENT);
+        			
+                    BufferedReader br = new BufferedReader(new InputStreamReader(httpURLConnection.getInputStream()));
+                    StringBuilder sb = new StringBuilder();
+                    String line;
+                    while ((line = br.readLine()) != null) {
+                        sb.append(line+"\n");
+                    }
+                    HashMap<String,Map<String,String>> result =
+                            new ObjectMapper().readValue(sb.toString(), HashMap.class);
+        			sendImageMessage(senderId,new URL(result.get("data").get("image_path")));
         	        
         	        //int responseCode = httpURLConnection.getResponseCode();
         	        //if (responseCode == 200) {
@@ -209,7 +218,7 @@ public class MessengerPlatformCallbackHandler {
         			// convert JSON string to Map
         			map = mapper.readValue(json, new TypeReference<Map<String, String>>(){});
         			*/
-        			builder.append(httpURLConnection.getResponseCode())
+        			/*builder.append(httpURLConnection.getResponseCode())
         			       .append(" ")
         			       .append(httpURLConnection.getResponseMessage())
         			       .append("\n");
@@ -235,7 +244,7 @@ public class MessengerPlatformCallbackHandler {
         			}
         			ID = false;
         			sendTextMessage(senderId,"ID="+id+"\n"+builder.toString());
-        			sendImageMessage(senderId,new URL(map.get("image_path")+""));
+        			sendImageMessage(senderId,new URL(map.get("image_path")+""));*/
 //        			sendTextMessage(senderId,""+con.getHeaderFields());
 //        			sendTextMessage(senderId,""+con.getRequestProperties());
         			//}
