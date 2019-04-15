@@ -109,8 +109,9 @@ public class MessengerPlatformCallbackHandler {
 
     private final Messenger messenger;
     
-    private boolean ID = false;
+    private static final String USER_AGENT = "Mozilla/5.0";
     
+    private boolean ID = false;
     
 
     @Autowired
@@ -193,7 +194,10 @@ public class MessengerPlatformCallbackHandler {
         		    
         			HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
         			httpURLConnection.setRequestMethod("GET");
-        			
+        			httpURLConnection.setRequestProperty("User-Agent", USER_AGENT);
+        	        
+        	        //int responseCode = httpURLConnection.getResponseCode();
+        	        //if (responseCode == 200) {
         			/*ObjectMapper mapper = new ObjectMapper();
         			String json = httpURLConnection.getResponseMessage();
         			if(json==null||json.equalsIgnoreCase("forbedden")) {
