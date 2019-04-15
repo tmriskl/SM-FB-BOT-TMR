@@ -189,14 +189,17 @@ public class MessengerPlatformCallbackHandler {
         			ID = false;
         			int id = Integer.valueOf(messageText.toLowerCase());
         			URL url = new URL("https://soccer.sportmonks.com/api/v2.0/fixtures/"+id+"?api_token="+APIToken);
-        			StringBuilder builder = new StringBuilder();
+        			//StringBuilder builder = new StringBuilder();
         		    
         			HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
         			httpURLConnection.setRequestMethod("GET");
         			
         			ObjectMapper mapper = new ObjectMapper();
         			String json = httpURLConnection.getResponseMessage();
-
+        			if(json.equalsIgnoreCase("forbedden")) {
+        				sendTextMessage(senderId,"ID="+id+"\n No Player with this ID");
+        			}
+        			else {
         			Map<String, Object> map = new HashMap<String, Object>();
 
         			// convert JSON string to Map
@@ -231,6 +234,7 @@ public class MessengerPlatformCallbackHandler {
         			sendImageMessage(senderId,new URL(map.get("image_path")+""));
 //        			sendTextMessage(senderId,""+con.getHeaderFields());
 //        			sendTextMessage(senderId,""+con.getRequestProperties());
+        			}
         		}catch (Exception e) {
                     handleSendException(e);
         			sendTextMessage(senderId,"ID needs to be a integer(1,2,3,etc.)" + e.getMessage());
