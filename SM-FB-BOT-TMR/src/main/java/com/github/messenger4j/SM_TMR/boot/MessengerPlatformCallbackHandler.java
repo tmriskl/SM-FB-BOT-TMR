@@ -95,7 +95,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/callback")
 public class MessengerPlatformCallbackHandler {
 
-//    private static final String RESOURCE_URL = "https://raw.githubusercontent.com/fbsamples/messenger-platform-samples/master/node/public";
     private enum Mode{
     	DEFAULT, PLAYER, PLAYER_ID
     }
@@ -105,7 +104,7 @@ public class MessengerPlatformCallbackHandler {
     private final String APIToken = "BYkxdcd63GQD1XDQaKyRLUKMswJiH4VHiQnXldpgSDKlChG3iZsuRa3JzJLI";
     private final Messenger messenger;
     private final String DEFAULT_MESSEGE = "Type 'player' to get player info\n";
-    private final String PLAYER_INFO_TYPES = "This is the player info:";//"Type one of the following keys to get the information:\n";
+    private final String PLAYER_INFO_TYPES = "Type one of the following keys to get the information:";
     private final String NOT_VALID_KEY = " is not a valid key";
     private final String EXIT_OPTION = "exit";
     private final String EXIT = "Type '"+EXIT_OPTION+"' to choose a different player\n";
@@ -119,10 +118,6 @@ public class MessengerPlatformCallbackHandler {
         this.messenger = messenger;
     }
 
-    /**
-     * Webhook verification endpoint. <p> The passed verification token (as query parameter) must match the configured
-     * verification token. In case this is true, the passed challenge string must be returned by this endpoint.
-     */
     @RequestMapping(method = RequestMethod.GET)
     public ResponseEntity<String> verifyWebhook(@RequestParam(MODE_REQUEST_PARAM_NAME) final String mode,
                                                 @RequestParam(VERIFY_TOKEN_REQUEST_PARAM_NAME) final String verifyToken, @RequestParam(CHALLENGE_REQUEST_PARAM_NAME) final String challenge) {
@@ -136,9 +131,6 @@ public class MessengerPlatformCallbackHandler {
         }
     }
 
-    /**
-     * Callback endpoint responsible for processing the inbound messages and events.
-     */
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity<Void> handleCallback(@RequestBody final String payload, @RequestHeader(SIGNATURE_HEADER_NAME) final String signature) {
         logger.debug("Received Messenger Platform callback - payload: {} | signature: {}", payload, signature);
@@ -250,9 +242,9 @@ public class MessengerPlatformCallbackHandler {
     	StringBuilder builder = new StringBuilder();
 		builder.append(PLAYER_INFO_TYPES);
 		for(Entry<String, Object> entry: info.entrySet()) {
-			builder.append("\n" + entry.getKey()/* + ": " + entry.getValue()*/);
+			builder.append("\n" + entry.getKey());
 		}
-		builder.append(EXIT);
+		builder.append("\n" + EXIT);
 		return builder;
 	}
 
@@ -417,7 +409,7 @@ public class MessengerPlatformCallbackHandler {
 //    
 //
 //    private void sendImageMessage(String recipientId) throws MessengerApiException, MessengerIOException, MalformedURLException {
-//        final UrlRichMediaAsset richMediaAsset = UrlRichMediaAsset.create(IMAGE, new URL(RESOURCE_URL + "/assets/rift.png"));
+//        final UrlRichMediaAsset richMediaAsset = UrlRichMediaAsset.create(IMAGE, new (RESOURCE_URL + "/assets/rift.png"));
 //        sendRichMediaMessage(recipientId, richMediaAsset);
 //    }
 //    
