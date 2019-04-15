@@ -209,7 +209,7 @@ public class MessengerPlatformCallbackHandler {
         			sendTextMessage(senderId,"ID needs to be a integer(1,2,3,etc.)");
         		}catch (Exception e) {
                     handleSendException(e);
-        			sendTextMessage(senderId,"Error: " + e.getClass() + " " + e.getMessage());
+        			sendTextMessage(senderId,"Error:\n" + e.getClass() + "\n" + e.getMessage());
         		}
         	}
         	/*else if(mode.equals(Mode.PLAYER)){
@@ -250,7 +250,7 @@ public class MessengerPlatformCallbackHandler {
     	StringBuilder builder = new StringBuilder();
 		builder.append(PLAYER_INFO_TYPES);
 		for(Entry<String, Object> entry: info.entrySet()) {
-			builder.append(entry.getKey() + ": " + entry.getValue().toString());
+			builder.append(entry.getKey() + ": " + entry.getValue());
 		}
 		//builder.append(EXIT);
 		return builder;
