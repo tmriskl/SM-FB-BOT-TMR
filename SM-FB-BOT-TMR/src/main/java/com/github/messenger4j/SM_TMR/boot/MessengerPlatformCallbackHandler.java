@@ -187,7 +187,7 @@ public class MessengerPlatformCallbackHandler {
         	if(ID) {
         		try {
         			ID = false;
-        			int id = Integer.valueOf(messageText.toLowerCase());
+        			long id = Long.valueOf(messageText.toLowerCase());
         			URL url = new URL("https://soccer.sportmonks.com/api/v2.0/fixtures/"+id+"?api_token="+APIToken);
         			StringBuilder builder = new StringBuilder();
         		    
@@ -240,7 +240,7 @@ public class MessengerPlatformCallbackHandler {
         			sendTextMessage(senderId,"ID needs to be a integer(1,2,3,etc.)");
         		}catch (Exception e) {
                     handleSendException(e);
-        			sendTextMessage(senderId,"Error" + e.getMessage());
+        			sendTextMessage(senderId,"Error: " + e.getMessage());
         		}
         	}
         	else {
