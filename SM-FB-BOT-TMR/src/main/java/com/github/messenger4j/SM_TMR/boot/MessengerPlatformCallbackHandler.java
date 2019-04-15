@@ -235,9 +235,12 @@ public class MessengerPlatformCallbackHandler {
 //        			sendTextMessage(senderId,""+con.getHeaderFields());
 //        			sendTextMessage(senderId,""+con.getRequestProperties());
         			//}
+        		}catch (NumberFormatException e) {
+                    handleSendException(e);
+        			sendTextMessage(senderId,"ID needs to be a integer(1,2,3,etc.)");
         		}catch (Exception e) {
                     handleSendException(e);
-        			sendTextMessage(senderId,"ID needs to be a integer(1,2,3,etc.)" + e.getMessage());
+        			sendTextMessage(senderId,"Error" + e.getMessage());
         		}
         	}
         	else {
