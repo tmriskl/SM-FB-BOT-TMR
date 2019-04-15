@@ -201,6 +201,7 @@ public class MessengerPlatformCallbackHandler {
         			}
         			else {
         				sendTextMessage(senderId, NO_PLAYER + id);
+            			sendTextMessage(senderId, DEFAULT_MESSEGE);
             			mode = Mode.DEFAULT;
         			}
         		}catch (NumberFormatException e) {
