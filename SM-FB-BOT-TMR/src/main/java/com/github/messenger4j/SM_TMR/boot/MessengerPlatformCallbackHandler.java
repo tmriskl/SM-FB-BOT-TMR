@@ -229,7 +229,7 @@ public class MessengerPlatformCallbackHandler {
         		switch (messageText.toLowerCase()) {
         		case "player":
         			sendTextMessage(senderId, "what is the player id?");
-        			mode = Mode.PLAYER;
+        			mode = Mode.PLAYER_ID;
         			break;
         		case "hello":
         		case "hey":
