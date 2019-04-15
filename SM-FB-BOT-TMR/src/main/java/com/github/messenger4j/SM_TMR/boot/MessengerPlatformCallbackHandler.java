@@ -205,7 +205,7 @@ public class MessengerPlatformCallbackHandler {
         		}
         	}
         	else if(mode.equals(Mode.PLAYER)){
-        		if(messageText.toLowerCase().equals("EXIT_OPTION")) {
+        		if(messageText.toLowerCase().equals(EXIT_OPTION)) {
         			info = null;
         			mode = Mode.DEFAULT;
         			sendTextMessage(senderId, DEFAULT_MESSEGE);
