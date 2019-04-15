@@ -108,6 +108,7 @@ public class MessengerPlatformCallbackHandler {
     private final String NOT_VALID_KEY = " is not a valid key";
     private final String EXIT_OPTION = "exit";
     private final String EXIT = "Type '"+EXIT_OPTION+"' to choose a different player\n";
+    private final String NO_PLAYER = "Player not found for ID ";
     
     private Map<String,Object> info = null;
     private Mode mode = Mode.DEFAULT;
@@ -184,7 +185,8 @@ public class MessengerPlatformCallbackHandler {
         			URL url = new URL("https://soccer.sportmonks.com/api/v2.0/players/"+id+"?api_token="+APIToken);
         			HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
         			httpURLConnection.setRequestMethod("GET");
-        			
+        			int code = httpURLConnection.getResponseCode();
+        			if((code == 200)||(code == 201)) {
                     BufferedReader br = new BufferedReader(new InputStreamReader(httpURLConnection.getInputStream()));
                     StringBuilder sb = new StringBuilder();
                     String line;
@@ -195,7 +197,10 @@ public class MessengerPlatformCallbackHandler {
                     info = result.get("data");
         			sendImageMessage(senderId,new URL(info.get("image_path").toString()));
     				sendTextMessage(senderId, BuilderFromInfoMap().toString());
-
+        			}
+        			else {
+        				sendTextMessage(senderId, NO_PLAYER + id);
+        			}
         		}catch (NumberFormatException e) {
                     handleSendException(e);
         			sendTextMessage(senderId,"ID needs to be a integer(1,2,3,etc.)");
