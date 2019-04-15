@@ -185,7 +185,7 @@ public class MessengerPlatformCallbackHandler {
         try {
         	if(mode.equals(Mode.PLAYER_ID)) {
         		try {
-        			mode.equals(Mode.PLAYER);
+        			mode = Mode.PLAYER;
         			long id = Long.valueOf(messageText.toLowerCase());
         			URL url = new URL("https://soccer.sportmonks.com/api/v2.0/players/"+id+"?api_token="+APIToken);
         			HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
