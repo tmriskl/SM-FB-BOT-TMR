@@ -110,7 +110,7 @@ public class MessengerPlatformCallbackHandler {
     //private final String EXIT_OPTION = "exit";
     //private final String EXIT = "Type '"+EXIT_OPTION+"' to choose a different player\n";
     
-    private Map<String,String> info = null;
+    private Map<String,Object> info = null;
     private Mode mode = Mode.DEFAULT;
     
 
@@ -199,9 +199,9 @@ public class MessengerPlatformCallbackHandler {
                     while ((line = br.readLine()) != null) {
                         sb.append(line+"\n");
                     }
-                    HashMap<String,Map<String,String>> result = new ObjectMapper().readValue(sb.toString(), HashMap.class);
+                    HashMap<String,Map<String,Object>> result = new ObjectMapper().readValue(sb.toString(), HashMap.class);
                     info = result.get("data");
-        			sendImageMessage(senderId,new URL(info.get("image_path")));
+        			sendImageMessage(senderId,new URL(info.get("image_path").toString()));
     				sendTextMessage(senderId, BuilderFromInfoMap().toString());
 
         		}catch (NumberFormatException e) {
@@ -249,8 +249,8 @@ public class MessengerPlatformCallbackHandler {
     private StringBuilder BuilderFromInfoMap() {
     	StringBuilder builder = new StringBuilder();
 		builder.append(PLAYER_INFO_TYPES);
-		for(Entry<String, String> entry: info.entrySet()) {
-			builder.append(entry.getKey() + ": " + entry.getValue());
+		for(Entry<String, Object> entry: info.entrySet()) {
+			builder.append(entry.getKey() + ": " + entry.getValue().toString());
 		}
 		//builder.append(EXIT);
 		return builder;
