@@ -180,26 +180,28 @@ public class MessengerPlatformCallbackHandler {
         try {
         	if(mode.equals(Mode.PLAYER_ID)) {
         		try {
-        			mode = Mode.PLAYER;
         			long id = Long.valueOf(messageText.toLowerCase());
         			URL url = new URL("https://soccer.sportmonks.com/api/v2.0/players/"+id+"?api_token="+APIToken);
         			HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
         			httpURLConnection.setRequestMethod("GET");
         			int code = httpURLConnection.getResponseCode();
+        			
         			if((code == 200)||(code == 201)) {
-                    BufferedReader br = new BufferedReader(new InputStreamReader(httpURLConnection.getInputStream()));
-                    StringBuilder sb = new StringBuilder();
-                    String line;
-                    while ((line = br.readLine()) != null) {
-                        sb.append(line+"\n");
-                    }
-                    HashMap<String,Map<String,Object>> result = new ObjectMapper().readValue(sb.toString(), HashMap.class);
-                    info = result.get("data");
-        			sendImageMessage(senderId,new URL(info.get("image_path").toString()));
-    				sendTextMessage(senderId, BuilderFromInfoMap().toString());
+            			mode = Mode.PLAYER;
+        				BufferedReader br = new BufferedReader(new InputStreamReader(httpURLConnection.getInputStream()));
+        				StringBuilder sb = new StringBuilder();
+        				String line;
+        				while ((line = br.readLine()) != null) {
+        					sb.append(line+"\n");
+        				}
+        				HashMap<String,Map<String,Object>> result = new ObjectMapper().readValue(sb.toString(), HashMap.class);
+        				info = result.get("data");
+        				sendImageMessage(senderId,new URL(info.get("image_path").toString()));
+        				sendTextMessage(senderId, BuilderFromInfoMap().toString());
         			}
         			else {
         				sendTextMessage(senderId, NO_PLAYER + id);
+            			mode = Mode.DEFAULT;
         			}
         		}catch (NumberFormatException e) {
                     handleSendException(e);
